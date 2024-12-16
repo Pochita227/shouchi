@@ -1,0 +1,37 @@
+name: Update Website Content
+
+on:
+  push:
+    paths:
+      - "Data/signals.csv"  # Đảm bảo rằng signals.csv nằm trong thư mục Data trong repo của bạn
+  workflow_dispatch:  # Cho phép chạy thủ công từ UI của GitHub
+
+jobs:
+  update-website:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Cài đặt các thư viện trong requirements.txt
+
+      - name: Run Python script to update CSV
+        run: |
+          python3 demobot2.py  # Chạy script Python của bạn (thay your_script.py bằng tên file thực tế)
+
+      - name: Commit changes and push to repository
+        run: |
+          git config --global user.email "phananh140783@gmail.com"  # Cập nhật email của bạn
+          git config --global user.name "pochita"  # Cập nhật tên của bạn
+          git add Data/signals.csv  # Đảm bảo rằng bạn đang thêm file signals.csv đã được cập nhật vào commit
+          git commit -m "Update signals.csv"
+          git push
