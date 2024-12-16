@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signals Page</title>
+</head>
+<body>
+    <h1>Signals Data</h1>
+
+    {% if signals %}
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Instrument ID</th>
+                <th>Signal Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for signal in signals %}
+            <tr>
+                <td>{{ signal.timestamp }}</td>
+                <td>{{ signal.inst_id }}</td>
+                <td>{{ signal.signal_type }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No signals available.</p>
+    {% endif %}
+</body>
+</html>
