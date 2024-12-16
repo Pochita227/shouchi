@@ -10,10 +10,18 @@ CSV_PATH = 'D:/pyth bot - II/demobot2/Data/signals.csv'
 # Hàm để đọc dữ liệu từ signals.csv
 def read_signals_csv():
     if os.path.exists(CSV_PATH):
-        df = pd.read_csv(CSV_PATH)
-        print(df.head())  # In ra vài dòng đầu tiên để kiểm tra dữ liệu
-        return df
+        try:
+            df = pd.read_csv(CSV_PATH)
+            if df.empty:
+                print("File CSV trống.")
+                return None
+            print(df.head())  # In ra vài dòng đầu tiên để kiểm tra dữ liệu
+            return df
+        except Exception as e:
+            print(f"Lỗi khi đọc file CSV: {e}")
+            return None
     else:
+        print(f"File CSV không tồn tại tại {CSV_PATH}.")
         return None
 
 @app.route('/')
