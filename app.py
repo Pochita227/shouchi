@@ -1,40 +1,34 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template
 import pandas as pd
 import os
 
 app = Flask(__name__)
 
-# Đường dẫn tới file CSV nơi lưu tín hiệu
-csv_path = 'D:/Data/signals.csv'
-
-# Hàm đọc dữ liệu từ CSV
-def read_csv():
-    try:
-        # Kiểm tra nếu tệp CSV tồn tại
-        if os.path.exists(csv_path):
-            # Đọc dữ liệu từ file CSV
-            df = pd.read_csv(csv_path)
-            return df.to_dict(orient='records')  # Chuyển DataFrame thành list của dictionary
-        else:
-            return []  # Trả về danh sách rỗng nếu không có file
-    except Exception as e:
-        print(f"Lỗi khi đọc CSV: {e}")
-        return []
-
-# Route trang chính (giao diện web)
 @app.route('/')
 def index():
-    # Lấy dữ liệu tín hiệu từ file CSV
-    data = read_csv()
-    return render_template('index.html', signals=data)
+    # Đọc dữ liệu từ file CSV
+    file_path = "D:/pyth bot - II/demobot2/Data/signals.csv"
+    
+    # Kiểm tra nếu file CSV tồn tại
+    if os.path.exists(file_path):
+        try:
+            # Đọc file CSV vào DataFrame
+            df = pd.read_csv(file_path)
 
-# Route API để lấy tín hiệu (dữ liệu dạng JSON)
-@app.route('/api/signals')
-def api_signals():
-    # Trả về dữ liệu tín hiệu dưới dạng JSON
-    data = read_csv()
-    return jsonify(data)
+            # Kiểm tra nếu DataFrame có dữ liệu
+            if not df.empty:
+                # Chuyển DataFrame thành danh sách các dictionary
+                signals = df.to_dict(orient='records')
+            else:
+                signals = []
+        except Exception as e:
+            print(f"Lỗi khi đọc file CSV: {e}")
+            signals = []
+    else:
+        signals = []
 
-# Chạy ứng dụng Flask
-if __name__ == '__main__':
+    # Truyền dữ liệu signals vào template
+    return render_template('index.html', signals=signals)
+
+if __name__ == "__main__":
     app.run(debug=True)
